@@ -20,7 +20,7 @@
 				var rows = table.getElementsByTagName('tr');
 				for (var i = 1; i < rows.length; i++) {
 					var row = rows[i].getElementsByTagName('td');
-					data.push([row[0].textContent, row[1].textContent], row[2].textContent]);
+					data.push([row[0].textContent, row[1].textContent], row[2].textContent] );
 				}
 				var dataList = document.getElementById('data-list');
 				data.forEach(function(row) {
