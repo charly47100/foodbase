@@ -1,53 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Website</title>
+	<title>Google Sheets Example</title>
 </head>
 <body>
+	<h1>Google Sheets Example</h1>
+	<p>Here is some data pulled from a Google Sheets:</p>
+	<ul id="data-list"></ul>
 
-  <h1>My Products</h1>
-
-  <ul id="product-list"></ul>
-
-  <script src="https://apis.google.com/js/api.js"></script>
-  <script>
-    // Load the Google Sheets API client library
-    gapi.load('client', initClient);
-
-    // Initialize the Google Sheets API client
-    function initClient() {
-      gapi.client.init({
-        apiKey: 'api-key',
-        discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-      }).then(() => {
-        // Call the Google Sheets API to retrieve data
-        return gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: 'sheet-id',
-          range: 'Sheet1!A2:D',
-        });
-      }).then((response) => {
-        const data = response.result.values;
-        const productList = document.getElementById('product-list');
-
-        // Loop through the retrieved data and add it to the webpage
-        data.forEach((row) => {
-          const name = row[0];
-          const description = row[1];
-          const price = row[2];
-          const imageUrl = row[3];
-
-          const li = document.createElement('li');
-          li.innerHTML = `
-            <h2>${name}</h2>
-            <p>${description}</p>
-            <p>${price}</p>
-            <img src="${imageUrl}" alt="${name}">
-          `;
-          productList.appendChild(li);
-        });
-      });
-    }
-  </script>
-
+	<script>
+		fetch('https://docs.google.com/spreadsheets/d/e/1JuT6Cs5N427l6RIbohBcrTjvN--V2YaWP5cclTmhqfw/pubhtml')
+			.then(function(response) {
+				return response.text();
+			}).then(function(html) {
+				var parser = new DOMParser();
+				var doc = parser.parseFromString(html, 'text/html');
+				var data = [];
+				var table = doc.getElementsByTagName('table')[0];
+				var rows = table.getElementsByTagName('tr');
+				for (var i = 1; i < rows.length; i++) {
+					var row = rows[i].getElementsByTagName('td');
+					data.push([row[0].textContent, row[1].textContent]);
+				}
+				var dataList = document.getElementById('data-list');
+				data.forEach(function(row) {
+					var li = document.createElement('li');
+					li.textContent = row[0] + ': ' + row[1];
+					dataList.appendChild(li);
+				});
+			});
+	</script>
 </body>
 </html>
